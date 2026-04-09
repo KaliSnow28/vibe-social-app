@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "oTFfSpbWr_PU742dTWmSD"
@@ -24,3 +23,51 @@ id = "NrwFDz7YR8ukTCjGCcHbR"
 uri = "file://artifacts/mobile/assets/images/post3.png"
 type = "image"
 title = "generated_image"
+
+[[generated]]
+id = "nQZ4quEW8nk8shNs5S1bs"
+uri = "file://attached_assets/generated_images/vibe_app_icon.png"
+type = "image"
+title = "vibe app icon"
+
+[[generated]]
+id = "gXQaaIFUEeoUSxWDVmabS"
+uri = "file://attached_assets/generated_images/vibe_screenshot_feed.png"
+type = "image"
+title = "vibe feed screenshot"
+
+[[generated]]
+id = "XRswDwcM_RoHSOUncBhBz"
+uri = "file://attached_assets/generated_images/vibe_screenshot_creator.png"
+type = "image"
+title = "vibe creator dashboard screenshot"
+
+[[generated]]
+id = "tJwY2pkfnemVd9S5UE3f5"
+uri = "file://attached_assets/generated_images/vibe_screenshot_nft.png"
+type = "image"
+title = "vibe nft marketplace screenshot"
+
+[[outputs]]
+id = "viq2A09-cLTJxJd-UMrmk"
+uri = "file://attached_assets/generated_images/vibe_app_icon.png"
+type = "image"
+title = "Vibe App Icon (1024x1024)"
+
+[[outputs]]
+id = "zB_BFUThAbfoXGseSrhFC"
+uri = "file://attached_assets/generated_images/vibe_screenshot_feed.png"
+type = "image"
+title = "Screenshot 1 — Social Feed"
+
+[[outputs]]
+id = "9TdQ-2vk8gbLdl9L5ydJS"
+uri = "file://attached_assets/generated_images/vibe_screenshot_creator.png"
+type = "image"
+title = "Screenshot 2 — Creator Dashboard"
+
+[[outputs]]
+id = "h0VB-IH02FtmdWLJOXVEt"
+uri = "file://attached_assets/generated_images/vibe_screenshot_nft.png"
+type = "image"
+title = "Screenshot 3 — NFT Marketplace"
