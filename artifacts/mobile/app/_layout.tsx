@@ -16,6 +16,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AppProvider } from "@/context/AppContext";
 import { CharacterProvider } from "@/context/CharacterContext";
+import { WalletProvider } from "@/context/WalletContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -45,6 +46,26 @@ function RootLayoutNav() {
         name="avatar-creator"
         options={{ headerShown: false, presentation: "modal" }}
       />
+      <Stack.Screen
+        name="wallet"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="premium"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="creator-dashboard"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="livestream"
+        options={{ headerShown: false, presentation: "fullScreenModal" }}
+      />
+      <Stack.Screen
+        name="video-call/[id]"
+        options={{ headerShown: false, presentation: "fullScreenModal" }}
+      />
     </Stack>
   );
 }
@@ -72,9 +93,11 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <KeyboardProvider>
               <AppProvider>
-                <CharacterProvider>
-                  <RootLayoutNav />
-                </CharacterProvider>
+                <WalletProvider>
+                  <CharacterProvider>
+                    <RootLayoutNav />
+                  </CharacterProvider>
+                </WalletProvider>
               </AppProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>

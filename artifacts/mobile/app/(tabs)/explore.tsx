@@ -1,4 +1,5 @@
-import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather, FontAwesome5, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -17,6 +18,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ExploreSkeleton } from "@/components/SkeletonLoader";
 import { useApp } from "@/context/AppContext";
 import { useCharacters } from "@/context/CharacterContext";
+import { useWallet } from "@/context/WalletContext";
 import { useColors } from "@/hooks/useColors";
 import { useInitialLoad } from "@/hooks/useInitialLoad";
 
@@ -43,11 +45,34 @@ const SUGGESTED_USERS = [
   { id: "u4", username: "urban.lens", avatar: "https://i.pravatar.cc/150?img=23", followers: "562K" },
 ];
 
+const TRENDING_CREATORS = [
+  { id: "tc1", username: "alex_creates", avatar: "https://i.pravatar.cc/150?img=12", earnings: "$4.2K", badge: "🔥" },
+  { id: "tc2", username: "sarah.vibes", avatar: "https://i.pravatar.cc/150?img=5", earnings: "$2.8K", badge: "⚡" },
+  { id: "tc3", username: "marco_photo", avatar: "https://i.pravatar.cc/150?img=9", earnings: "$1.9K", badge: "🌟" },
+  { id: "tc4", username: "mia.art", avatar: "https://i.pravatar.cc/150?img=16", earnings: "$3.5K", badge: "💎" },
+  { id: "tc5", username: "liamshots", avatar: "https://i.pravatar.cc/150?img=8", earnings: "$980", badge: "🚀" },
+];
+
+const HASHTAG_CHALLENGES = [
+  { tag: "#VibeChallenge", posts: "8.2M", gradient: ["#E1306C", "#833AB4"] as [string, string], emoji: "🎵" },
+  { tag: "#SunsetShots", posts: "3.4M", gradient: ["#F7931A", "#E1306C"] as [string, string], emoji: "🌅" },
+  { tag: "#TravelVibes", posts: "12.1M", gradient: ["#833AB4", "#4C5BD4"] as [string, string], emoji: "✈️" },
+  { tag: "#FoodArt", posts: "5.7M", gradient: ["#F7931A", "#FCBB3C"] as [string, string], emoji: "🍜" },
+];
+
+const TRENDING_REELS = [
+  { id: "tr1", thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400", plays: "12.4M", username: "@alex_creates" },
+  { id: "tr2", thumbnail: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=400", plays: "8.9M", username: "@sarah.vibes" },
+  { id: "tr3", thumbnail: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=400", plays: "6.2M", username: "@mia.art" },
+  { id: "tr4", thumbnail: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400", plays: "4.8M", username: "@liamshots" },
+];
+
 export default function ExploreScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { posts } = useApp();
   const { characters } = useCharacters();
+  const { tipCreator } = useWallet();
   const [search, setSearch] = useState("");
   const [focused, setFocused] = useState(false);
   const initialLoading = useInitialLoad();
@@ -167,6 +192,69 @@ export default function ExploreScreen() {
           columnWrapperStyle={styles.row}
           ListHeaderComponent={() => (
             <View style={styles.charactersSection}>
+
+              <View style={styles.sectionBlock}>
+                <View style={styles.sectionRow}>
+                  <Text style={[styles.sectionTitle, { color: colors.foreground }]}>🔥 Trending Creators</Text>
+                  <Text style={[styles.seeAll, { color: colors.primary }]}>See all</Text>
+                </View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.creatorScroll}>
+                  {TRENDING_CREATORS.map((c) => (
+                    <View key={c.id} style={[styles.creatorCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                      <Text style={styles.creatorBadge}>{c.badge}</Text>
+                      <Image source={{ uri: c.avatar }} style={styles.creatorAvatar} />
+                      <Text style={[styles.creatorName, { color: colors.foreground }]} numberOfLines={1}>@{c.username}</Text>
+                      <Text style={[styles.creatorEarnings, { color: "#4CAF50" }]}>{c.earnings}/mo</Text>
+                      <Pressable
+                        style={[styles.tipBtn, { backgroundColor: colors.primary }]}
+                        onPress={() => tipCreator(c.username, "USDC", 1.00)}
+                      >
+                        <FontAwesome5 name="coins" size={10} color="#fff" />
+                        <Text style={styles.tipBtnText}>Tip</Text>
+                      </Pressable>
+                    </View>
+                  ))}
+                </ScrollView>
+              </View>
+
+              <View style={styles.sectionBlock}>
+                <View style={styles.sectionRow}>
+                  <Text style={[styles.sectionTitle, { color: colors.foreground }]}>🎯 Hashtag Challenges</Text>
+                </View>
+                <View style={styles.challengesGrid}>
+                  {HASHTAG_CHALLENGES.map((h) => (
+                    <Pressable key={h.tag} style={styles.challengeCard}>
+                      <LinearGradient colors={h.gradient} style={styles.challengeGradient}>
+                        <Text style={styles.challengeEmoji}>{h.emoji}</Text>
+                        <Text style={styles.challengeTag}>{h.tag}</Text>
+                        <Text style={styles.challengePosts}>{h.posts} posts</Text>
+                      </LinearGradient>
+                    </Pressable>
+                  ))}
+                </View>
+              </View>
+
+              <View style={styles.sectionBlock}>
+                <View style={styles.sectionRow}>
+                  <Text style={[styles.sectionTitle, { color: colors.foreground }]}>▶️ Viral Reels</Text>
+                  <Text style={[styles.seeAll, { color: colors.primary }]}>See all</Text>
+                </View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.reelScroll}>
+                  {TRENDING_REELS.map((r) => (
+                    <Pressable key={r.id} style={styles.reelCard}>
+                      <Image source={{ uri: r.thumbnail }} style={styles.reelThumb} resizeMode="cover" />
+                      <LinearGradient colors={["transparent", "rgba(0,0,0,0.7)"]} style={styles.reelOverlay}>
+                        <Ionicons name="play-circle" size={28} color="#fff" />
+                        <View>
+                          <Text style={styles.reelPlays}>{r.plays} plays</Text>
+                          <Text style={styles.reelUser}>{r.username}</Text>
+                        </View>
+                      </LinearGradient>
+                    </Pressable>
+                  ))}
+                </ScrollView>
+              </View>
+
               <View style={styles.charactersSectionHeader}>
                 <View style={styles.charactersSectionLeft}>
                   <MaterialCommunityIcons name="robot-outline" size={18} color={colors.primary} />
@@ -322,6 +410,129 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   tagsSection: {},
+  sectionBlock: {
+    marginBottom: 20,
+    paddingHorizontal: 0,
+  },
+  sectionRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    marginBottom: 12,
+  },
+  creatorScroll: {
+    paddingHorizontal: 16,
+    gap: 10,
+  },
+  creatorCard: {
+    width: 110,
+    borderRadius: 16,
+    padding: 12,
+    alignItems: "center",
+    borderWidth: 1,
+    gap: 4,
+    position: "relative",
+  },
+  creatorBadge: {
+    position: "absolute",
+    top: 6,
+    right: 8,
+    fontSize: 14,
+  },
+  creatorAvatar: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    marginBottom: 4,
+  },
+  creatorName: {
+    fontSize: 12,
+    fontWeight: "600" as const,
+  },
+  creatorEarnings: {
+    fontSize: 11,
+    fontWeight: "700" as const,
+  },
+  tipBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginTop: 4,
+  },
+  tipBtnText: {
+    color: "#fff",
+    fontSize: 11,
+    fontWeight: "700" as const,
+  },
+  challengesGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    paddingHorizontal: 16,
+    gap: 10,
+  },
+  challengeCard: {
+    width: (width - 42) / 2,
+    height: 90,
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+  challengeGradient: {
+    flex: 1,
+    padding: 14,
+    justifyContent: "flex-end",
+  },
+  challengeEmoji: {
+    fontSize: 24,
+    marginBottom: 4,
+  },
+  challengeTag: {
+    color: "#fff",
+    fontWeight: "700" as const,
+    fontSize: 13,
+  },
+  challengePosts: {
+    color: "rgba(255,255,255,0.75)",
+    fontSize: 11,
+    marginTop: 2,
+  },
+  reelScroll: {
+    paddingHorizontal: 16,
+    gap: 10,
+  },
+  reelCard: {
+    width: 130,
+    height: 200,
+    borderRadius: 16,
+    overflow: "hidden",
+    position: "relative",
+  },
+  reelThumb: {
+    width: "100%",
+    height: "100%",
+  },
+  reelOverlay: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "flex-end",
+    gap: 6,
+  },
+  reelPlays: {
+    color: "#fff",
+    fontSize: 11,
+    fontWeight: "700" as const,
+  },
+  reelUser: {
+    color: "rgba(255,255,255,0.8)",
+    fontSize: 10,
+  },
   userResult: {
     flexDirection: "row",
     alignItems: "center",

@@ -1,5 +1,6 @@
-import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather, FontAwesome5, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Dimensions,
@@ -15,6 +16,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useApp } from "@/context/AppContext";
+import { useWallet } from "@/context/WalletContext";
 import { useColors } from "@/hooks/useColors";
 
 const { width } = Dimensions.get("window");
@@ -52,6 +54,7 @@ export default function ProfileScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { me } = useApp();
+  const { totalUsd, activeTier } = useWallet();
   const [activeTab, setActiveTab] = useState<"grid" | "tagged">("grid");
   const [showEdit, setShowEdit] = useState(false);
   const [bio, setBio] = useState(me.bio);
@@ -118,6 +121,42 @@ export default function ProfileScreen() {
             <Feather name="user-plus" size={16} color={colors.foreground} />
           </Pressable>
         </View>
+      </View>
+
+      <View style={styles.creatorPanel}>
+        <Pressable
+          style={[styles.creatorPanelBtn, { backgroundColor: "#1a0533" }]}
+          onPress={() => router.push("/wallet")}
+        >
+          <FontAwesome5 name="coins" size={16} color="#F7931A" />
+          <View style={styles.creatorPanelInfo}>
+            <Text style={styles.creatorPanelLabel}>Crypto Wallet</Text>
+            <Text style={styles.creatorPanelValue}>${totalUsd.toFixed(2)}</Text>
+          </View>
+          <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
+        </Pressable>
+        <Pressable
+          style={[styles.creatorPanelBtn, { backgroundColor: "#0d1a3a" }]}
+          onPress={() => router.push("/creator-dashboard")}
+        >
+          <Ionicons name="stats-chart" size={16} color="#4CAF50" />
+          <View style={styles.creatorPanelInfo}>
+            <Text style={styles.creatorPanelLabel}>Creator Dashboard</Text>
+            <Text style={styles.creatorPanelValue}>$169/week</Text>
+          </View>
+          <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
+        </Pressable>
+        <Pressable
+          style={[styles.creatorPanelBtn, { backgroundColor: "#2a0a4a" }]}
+          onPress={() => router.push("/premium")}
+        >
+          <Ionicons name="star" size={16} color="#833AB4" />
+          <View style={styles.creatorPanelInfo}>
+            <Text style={styles.creatorPanelLabel}>Subscription</Text>
+            <Text style={styles.creatorPanelValue}>{activeTier === "pro" ? "Vibe Pro" : activeTier === "creator" ? "Creator Elite" : activeTier === "plus" ? "Vibe+" : "Free"}</Text>
+          </View>
+          <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
+        </Pressable>
       </View>
 
       <ScrollView
@@ -363,6 +402,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: "center",
     justifyContent: "center",
+  },
+  creatorPanel: {
+    marginHorizontal: 14,
+    marginBottom: 14,
+    gap: 8,
+  },
+  creatorPanelBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+  },
+  creatorPanelInfo: {
+    flex: 1,
+  },
+  creatorPanelLabel: {
+    color: "rgba(255,255,255,0.6)",
+    fontSize: 11,
+    fontWeight: "500" as const,
+  },
+  creatorPanelValue: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "700" as const,
+    marginTop: 1,
   },
   highlightsList: {
     paddingHorizontal: 14,

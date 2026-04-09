@@ -2,6 +2,7 @@ import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
   Animated,
@@ -180,11 +181,28 @@ export default function CameraScreen() {
           </View>
         </Pressable>
 
-        <Pressable onPress={handleCapture} testID="camera-capture">
+        <Pressable
+          onPress={() => {
+            if (MODES[selectedMode] === "Live") {
+              router.push("/livestream");
+            } else {
+              handleCapture();
+            }
+          }}
+          testID="camera-capture"
+        >
           <Animated.View
-            style={[styles.captureBtn, { transform: [{ scale: captureAnim }] }]}
+            style={[
+              styles.captureBtn,
+              { transform: [{ scale: captureAnim }] },
+              MODES[selectedMode] === "Live" && { borderColor: "#E1306C" },
+            ]}
           >
-            <View style={styles.captureInner} />
+            {MODES[selectedMode] === "Live" ? (
+              <View style={[styles.captureInner, { backgroundColor: "#E1306C" }]} />
+            ) : (
+              <View style={styles.captureInner} />
+            )}
           </Animated.View>
         </Pressable>
 

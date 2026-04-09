@@ -124,7 +124,10 @@ export default function ChatScreen() {
           <Pressable style={styles.headerBtn}>
             <Feather name="phone" size={22} color={colors.foreground} />
           </Pressable>
-          <Pressable style={styles.headerBtn}>
+          <Pressable
+            style={styles.headerBtn}
+            onPress={() => router.push({ pathname: "/video-call/[id]", params: { id: id ?? "1" } })}
+          >
             <Feather name="video" size={22} color={colors.foreground} />
           </Pressable>
         </View>
