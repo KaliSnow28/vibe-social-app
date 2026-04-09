@@ -107,3 +107,21 @@ id = "jCJzwj_JUiZVU-QNFe-6Y"
 uri = "file://attached_assets/generated_images/vibe_screenshot_nft_2688.jpg"
 type = "image"
 title = "Screenshot 3 — NFT Marketplace (JPEG)"
+
+[[outputs]]
+id = "XLbRQPg3p9H9LFgNbuqYr"
+uri = "file://attached_assets/generated_images/vibe_screenshot_feed_1242x2688.jpg"
+type = "image"
+title = "Screenshot 1 — Feed (1242x2688)"
+
+[[outputs]]
+id = "MlU-h6LVGJ-MhVQZMuDBf"
+uri = "file://attached_assets/generated_images/vibe_screenshot_creator_1242x2688.jpg"
+type = "image"
+title = "Screenshot 2 — Creator Dashboard (1242x2688)"
+
+[[outputs]]
+id = "tkth37-Q3PX2Sns5MSwZo"
+uri = "file://attached_assets/generated_images/vibe_screenshot_nft_1242x2688.jpg"
+type = "image"
+title = "Screenshot 3 — NFT Marketplace (1242x2688)"
