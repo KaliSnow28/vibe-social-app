@@ -197,8 +197,8 @@ export default function ProfileScreen() {
               color={colors.foreground}
             />
           </Pressable>
-          <Pressable style={styles.headerIcon}>
-            <Feather name="menu" size={24} color={colors.foreground} />
+          <Pressable style={styles.headerIcon} testID="settings-btn">
+            <Ionicons name="settings-outline" size={24} color={colors.foreground} />
           </Pressable>
         </View>
       </View>

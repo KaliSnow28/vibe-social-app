@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
   createContext,
   useCallback,
@@ -203,7 +204,7 @@ function makeStories(): Story[] {
       timestamp: Date.now() - 1000 * 60 * 30,
     },
     ...MOCK_USERS.map((u, i) => ({
-      id: makeId(),
+      id: `story-${i}`,
       userId: u.id,
       username: u.username,
       avatar: u.avatar,
@@ -217,7 +218,7 @@ function makeStories(): Story[] {
 
 function makePosts(): Post[] {
   return MOCK_USERS.map((u, i) => ({
-    id: makeId(),
+    id: `post-${i}`,
     userId: u.id,
     username: u.username,
     avatar: u.avatar,
@@ -426,6 +427,12 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | null>(null);
 
+const STORAGE_KEYS = {
+  likedPosts: "vibe:liked_posts",
+  savedPosts: "vibe:saved_posts",
+  seenStories: "vibe:seen_stories",
+} as const;
+
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [me] = useState<User>(ME);
   const [stories, setStories] = useState<Story[]>(makeStories());
@@ -437,6 +444,49 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>(
     makeNotifications()
   );
+
+  useEffect(() => {
+    const hydrate = async () => {
+      try {
+        const [likedRaw, savedRaw, seenRaw] = await Promise.all([
+          AsyncStorage.getItem(STORAGE_KEYS.likedPosts),
+          AsyncStorage.getItem(STORAGE_KEYS.savedPosts),
+          AsyncStorage.getItem(STORAGE_KEYS.seenStories),
+        ]);
+        const likedIds = new Set<string>(likedRaw ? (JSON.parse(likedRaw) as string[]) : []);
+        const savedIds = new Set<string>(savedRaw ? (JSON.parse(savedRaw) as string[]) : []);
+        const seenIds = new Set<string>(seenRaw ? (JSON.parse(seenRaw) as string[]) : []);
+        if (likedIds.size > 0 || savedIds.size > 0) {
+          setPosts((prev) =>
+            prev.map((p) => ({
+              ...p,
+              liked: likedIds.has(p.id) ? true : p.liked,
+              saved: savedIds.has(p.id) ? true : p.saved,
+            }))
+          );
+        }
+        if (seenIds.size > 0) {
+          setStories((prev) =>
+            prev.map((s) => ({ ...s, seen: seenIds.has(s.id) ? true : s.seen }))
+          );
+        }
+      } catch {
+      }
+    };
+    hydrate();
+  }, []);
+
+  useEffect(() => {
+    const likedIds = posts.filter((p) => p.liked).map((p) => p.id);
+    const savedIds = posts.filter((p) => p.saved).map((p) => p.id);
+    AsyncStorage.setItem(STORAGE_KEYS.likedPosts, JSON.stringify(likedIds)).catch(() => {});
+    AsyncStorage.setItem(STORAGE_KEYS.savedPosts, JSON.stringify(savedIds)).catch(() => {});
+  }, [posts]);
+
+  useEffect(() => {
+    const seenIds = stories.filter((s) => s.seen).map((s) => s.id);
+    AsyncStorage.setItem(STORAGE_KEYS.seenStories, JSON.stringify(seenIds)).catch(() => {});
+  }, [stories]);
 
   const unreadMessages = conversations.reduce(
     (sum, c) => sum + c.unreadCount,

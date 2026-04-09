@@ -11,8 +11,10 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { MessagesSkeleton } from "@/components/SkeletonLoader";
 import { useApp } from "@/context/AppContext";
 import { useColors } from "@/hooks/useColors";
+import { useInitialLoad } from "@/hooks/useInitialLoad";
 
 function formatTime(ts: number): string {
   const diff = Date.now() - ts;
@@ -27,6 +29,7 @@ export default function MessagesScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { conversations, me } = useApp();
+  const initialLoading = useInitialLoad();
   const isWeb = Platform.OS === "web";
   const headerTop = isWeb ? 67 : insets.top;
 
@@ -58,6 +61,9 @@ export default function MessagesScreen() {
         </View>
       </View>
 
+      {initialLoading ? (
+        <MessagesSkeleton />
+      ) : (
       <FlatList
         data={conversations}
         keyExtractor={(item) => item.id}
@@ -150,6 +156,7 @@ export default function MessagesScreen() {
         }}
         scrollEnabled={conversations.length > 0}
       />
+      )}
     </View>
   );
 }

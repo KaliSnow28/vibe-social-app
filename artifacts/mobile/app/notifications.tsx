@@ -11,8 +11,10 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { NotificationsSkeleton } from "@/components/SkeletonLoader";
 import { useApp } from "@/context/AppContext";
 import { useColors } from "@/hooks/useColors";
+import { useInitialLoad } from "@/hooks/useInitialLoad";
 
 function formatTime(ts: number): string {
   const diff = Date.now() - ts;
@@ -27,6 +29,7 @@ export default function NotificationsScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { notifications, markAllNotificationsRead, markNotificationRead } = useApp();
+  const initialLoading = useInitialLoad(500);
   const isWeb = Platform.OS === "web";
   const headerTop = isWeb ? 67 : insets.top;
 
@@ -63,6 +66,9 @@ export default function NotificationsScreen() {
         <View style={{ width: 24 }} />
       </View>
 
+      {initialLoading ? (
+        <NotificationsSkeleton />
+      ) : (
       <FlatList
         data={[...recentNotifs, ...olderNotifs]}
         keyExtractor={(item) => item.id}
@@ -138,6 +144,7 @@ export default function NotificationsScreen() {
         }}
         scrollEnabled={notifications.length > 0}
       />
+      )}
     </View>
   );
 }

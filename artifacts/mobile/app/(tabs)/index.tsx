@@ -12,16 +12,19 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { FeedSkeleton } from "@/components/SkeletonLoader";
 import { PostCard } from "@/components/PostCard";
 import { StoryCircle } from "@/components/StoryCircle";
 import { useApp } from "@/context/AppContext";
 import { useColors } from "@/hooks/useColors";
+import { useInitialLoad } from "@/hooks/useInitialLoad";
 
 export default function FeedScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { stories, posts, likePost, savePost, unreadMessages, unreadNotifications } = useApp();
   const [refreshing, setRefreshing] = useState(false);
+  const initialLoading = useInitialLoad();
   const isWeb = Platform.OS === "web";
 
   const headerTop = isWeb ? 67 : insets.top;
@@ -96,36 +99,40 @@ export default function FeedScreen() {
         </View>
       </View>
 
-      <FlatList
-        data={posts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <PostCard
-            post={item}
-            onLike={() => likePost(item.id)}
-            onSave={() => savePost(item.id)}
-            onComment={() => {}}
-            onUserPress={() => {}}
-          />
-        )}
-        ListHeaderComponent={ListHeader}
-        contentContainerStyle={[
-          styles.listContent,
-          {
-            paddingTop: headerTop + 50,
-            paddingBottom: isWeb ? 84 + 34 : 90,
-          },
-        ]}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            tintColor={colors.primary}
-          />
-        }
-        scrollEnabled={posts.length > 0}
-      />
+      {initialLoading ? (
+        <FeedSkeleton />
+      ) : (
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <PostCard
+              post={item}
+              onLike={() => likePost(item.id)}
+              onSave={() => savePost(item.id)}
+              onComment={() => {}}
+              onUserPress={() => {}}
+            />
+          )}
+          ListHeaderComponent={ListHeader}
+          contentContainerStyle={[
+            styles.listContent,
+            {
+              paddingTop: headerTop + 50,
+              paddingBottom: isWeb ? 84 + 34 : 90,
+            },
+          ]}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              tintColor={colors.primary}
+            />
+          }
+          scrollEnabled={posts.length > 0}
+        />
+      )}
     </View>
   );
 }

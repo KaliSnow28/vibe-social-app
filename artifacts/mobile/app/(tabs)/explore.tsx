@@ -14,9 +14,11 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ExploreSkeleton } from "@/components/SkeletonLoader";
 import { useApp } from "@/context/AppContext";
 import { useCharacters } from "@/context/CharacterContext";
 import { useColors } from "@/hooks/useColors";
+import { useInitialLoad } from "@/hooks/useInitialLoad";
 
 const { width } = Dimensions.get("window");
 const CELL = (width - 3) / 3;
@@ -48,6 +50,7 @@ export default function ExploreScreen() {
   const { characters } = useCharacters();
   const [search, setSearch] = useState("");
   const [focused, setFocused] = useState(false);
+  const initialLoading = useInitialLoad();
   const isWeb = Platform.OS === "web";
 
   const headerTop = isWeb ? 67 : insets.top;
@@ -103,7 +106,9 @@ export default function ExploreScreen() {
         </View>
       </View>
 
-      {focused && search.length > 0 ? (
+      {initialLoading ? (
+        <ExploreSkeleton />
+      ) : focused && search.length > 0 ? (
         <View style={[styles.searchResults, { paddingTop: headerTop + 60 }]}>
           {filteredUsers.length > 0 ? (
             filteredUsers.map((u) => (
