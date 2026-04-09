@@ -181,6 +181,39 @@ export default function ProfileScreen() {
           </View>
           <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
         </Pressable>
+        <Pressable
+          style={[styles.creatorPanelBtn, { backgroundColor: "#0a1a2a" }]}
+          onPress={() => router.push("/nft-marketplace")}
+        >
+          <MaterialCommunityIcons name="cube-outline" size={16} color="#2196F3" />
+          <View style={styles.creatorPanelInfo}>
+            <Text style={styles.creatorPanelLabel}>NFT Marketplace</Text>
+            <Text style={styles.creatorPanelValue}>Mint, Buy & Sell NFTs</Text>
+          </View>
+          <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
+        </Pressable>
+        <Pressable
+          style={[styles.creatorPanelBtn, { backgroundColor: "#1a0a2a" }]}
+          onPress={() => router.push("/referral")}
+        >
+          <Feather name="gift" size={16} color="#E1306C" />
+          <View style={styles.creatorPanelInfo}>
+            <Text style={styles.creatorPanelLabel}>Invite & Earn</Text>
+            <Text style={styles.creatorPanelValue}>50 gems per friend · Share now</Text>
+          </View>
+          <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
+        </Pressable>
+        <Pressable
+          style={[styles.creatorPanelBtn, { backgroundColor: "#0a0a1a" }]}
+          onPress={() => router.push("/settings")}
+        >
+          <Feather name="settings" size={16} color="#888" />
+          <View style={styles.creatorPanelInfo}>
+            <Text style={styles.creatorPanelLabel}>Settings</Text>
+            <Text style={styles.creatorPanelValue}>Account, privacy, appearance</Text>
+          </View>
+          <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
+        </Pressable>
       </View>
 
       <ScrollView

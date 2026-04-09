@@ -42,7 +42,6 @@ export default function CreateTierScreen() {
     setSaving(true);
     try {
       await createTier({
-        creatorId: me.id,
         name: name.trim(),
         description: description.trim(),
         monthlyPrice: price.toString(),

@@ -86,6 +86,12 @@ function RootLayoutNav() {
       <Stack.Screen name="payout-accounts" options={{ headerShown: false }} />
       <Stack.Screen name="earnings-dashboard" options={{ headerShown: false }} />
       <Stack.Screen name="payout-history" options={{ headerShown: false }} />
+      <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+      <Stack.Screen name="settings" options={{ headerShown: false }} />
+      <Stack.Screen name="referral" options={{ headerShown: false }} />
+      <Stack.Screen name="scheduled-posts" options={{ headerShown: false }} />
+      <Stack.Screen name="nft-marketplace" options={{ headerShown: false }} />
+      <Stack.Screen name="group-chat" options={{ headerShown: false }} />
     </Stack>
   );
 }
