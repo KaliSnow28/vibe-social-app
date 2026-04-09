@@ -1,4 +1,5 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import type { ComponentProps } from "react";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useRef, useState } from "react";
@@ -51,7 +52,7 @@ export default function CameraScreen() {
     setTimeout(() => setCaptured(false), 1500);
   };
 
-  const flashIcon =
+  const flashIcon: ComponentProps<typeof Ionicons>["name"] =
     flash === "on" ? "flash" : flash === "auto" ? "flash-outline" : "flash-off";
 
   const cycleFlash = () => {
@@ -93,7 +94,7 @@ export default function CameraScreen() {
 
       <View style={[styles.topControls, { top: topInset + 12 }]}>
         <Pressable onPress={cycleFlash} style={styles.controlBtn}>
-          <Ionicons name={flashIcon as any} size={24} color="#fff" />
+          <Ionicons name={flashIcon} size={24} color="#fff" />
         </Pressable>
         <Pressable style={styles.controlBtn}>
           <MaterialCommunityIcons name="timer-outline" size={24} color="#fff" />

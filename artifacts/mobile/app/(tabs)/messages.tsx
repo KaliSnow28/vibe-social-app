@@ -87,7 +87,7 @@ export default function MessagesScreen() {
             <Pressable
               style={[styles.convRow]}
               onPress={() =>
-                router.push(`/chat/${item.id}` as any)
+                router.push({ pathname: "/chat/[id]", params: { id: item.id } })
               }
               testID={`conv-${item.id}`}
             >

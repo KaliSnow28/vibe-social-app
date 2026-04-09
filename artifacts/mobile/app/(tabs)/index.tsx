@@ -44,7 +44,7 @@ export default function FeedScreen() {
           <StoryCircle
             key={story.id}
             story={story}
-            onPress={() => router.push(`/story/${story.id}` as any)}
+            onPress={() => router.push({ pathname: "/story/[id]", params: { id: story.id } })}
             showAddButton={story.userId === "me"}
           />
         ))}
@@ -68,7 +68,7 @@ export default function FeedScreen() {
         <View style={styles.headerRight}>
           <Pressable
             style={styles.headerIcon}
-            onPress={() => router.push("/notifications" as any)}
+            onPress={() => router.push("/notifications")}
             testID="notif-icon"
           >
             <Ionicons name="heart-outline" size={26} color={colors.foreground} />
@@ -81,7 +81,7 @@ export default function FeedScreen() {
             )}
           </Pressable>
           <Pressable
-            onPress={() => router.push("/(tabs)/messages" as any)}
+            onPress={() => router.push("/(tabs)/messages")}
             testID="messages-icon"
           >
             <Feather name="send" size={24} color={colors.foreground} />

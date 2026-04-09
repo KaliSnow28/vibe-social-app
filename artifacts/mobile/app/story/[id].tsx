@@ -6,6 +6,7 @@ import {
   Animated,
   Dimensions,
   Image,
+  PanResponder,
   Platform,
   Pressable,
   StyleSheet,
@@ -82,10 +83,26 @@ export default function StoryViewer() {
     else router.back();
   };
 
+  const handleLeftRef = useRef(handleLeft);
+  const handleRightRef = useRef(handleRight);
+  handleLeftRef.current = handleLeft;
+  handleRightRef.current = handleRight;
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, g) =>
+        Math.abs(g.dx) > 12 && Math.abs(g.dx) > Math.abs(g.dy),
+      onPanResponderRelease: (_, g) => {
+        if (g.dx < -40) handleRightRef.current();
+        else if (g.dx > 40) handleLeftRef.current();
+      },
+    })
+  ).current;
+
   if (!story) return null;
 
   return (
-    <View style={[styles.container, { backgroundColor: "#000" }]}>
+    <View style={[styles.container, { backgroundColor: "#000" }]} {...panResponder.panHandlers}>
       <Image
         source={{ uri: IMAGES[currentImage] }}
         style={StyleSheet.absoluteFill}
