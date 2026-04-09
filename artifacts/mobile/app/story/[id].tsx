@@ -94,8 +94,7 @@ export default function StoryViewer() {
 
       <LinearGradient
         colors={["rgba(0,0,0,0.4)", "transparent", "transparent", "rgba(0,0,0,0.5)"]}
-        style={StyleSheet.absoluteFill}
-        pointerEvents="none"
+        style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}
       />
 
       <View style={[styles.topSection, { paddingTop: topInset + 8 }]}>
@@ -216,9 +215,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "700" as const,
     fontSize: 14,
-    textShadowColor: "rgba(0,0,0,0.5)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    textShadow: "0px 1px 2px rgba(0,0,0,0.5)",
   },
   storyTime: {
     color: "rgba(255,255,255,0.7)",

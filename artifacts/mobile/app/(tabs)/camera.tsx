@@ -71,7 +71,7 @@ export default function CameraScreen() {
         ]}
       >
         {captured && (
-          <View style={styles.captureFlash} pointerEvents="none" />
+          <View style={[styles.captureFlash, { pointerEvents: "none" }]} />
         )}
         <View style={styles.viewfinderGrid}>
           {[...Array(4)].map((_, i) => (
@@ -84,9 +84,8 @@ export default function CameraScreen() {
         <View
           style={[
             styles.filterOverlay,
-            { backgroundColor: FILTERS[selectedFilter].tint },
+            { backgroundColor: FILTERS[selectedFilter].tint, pointerEvents: "none" },
           ]}
-          pointerEvents="none"
         />
         <Text style={styles.placeholderText}>Camera Preview</Text>
         <Text style={styles.placeholderSubtext}>(Camera not available in preview)</Text>

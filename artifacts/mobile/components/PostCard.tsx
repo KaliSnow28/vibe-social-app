@@ -36,6 +36,8 @@ function formatTime(ts: number): string {
   return `${Math.floor(hrs / 24)}d`;
 }
 
+const REACTIONS = ["❤️", "😂", "😍", "😮", "😢", "🔥", "👏"];
+
 export function PostCard({
   post,
   onLike,
@@ -47,7 +49,74 @@ export function PostCard({
   const heartScale = useRef(new Animated.Value(0)).current;
   const heartOpacity = useRef(new Animated.Value(0)).current;
   const likeScale = useRef(new Animated.Value(1)).current;
+  const pickerScale = useRef(new Animated.Value(0)).current;
+  const pickerOpacity = useRef(new Animated.Value(0)).current;
+
   const [lastTap, setLastTap] = useState(0);
+  const [showReactions, setShowReactions] = useState(false);
+  const [myReaction, setMyReaction] = useState<string | null>(null);
+  const [reactionCounts, setReactionCounts] = useState<Record<string, number>>({
+    "❤️": 48,
+    "😂": 12,
+    "😍": 23,
+    "🔥": 8,
+  });
+
+  const openReactionPicker = () => {
+    setShowReactions(true);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    pickerScale.setValue(0.6);
+    pickerOpacity.setValue(0);
+    Animated.parallel([
+      Animated.spring(pickerScale, {
+        toValue: 1,
+        damping: 12,
+        useNativeDriver: true,
+      }),
+      Animated.timing(pickerOpacity, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const closeReactionPicker = () => {
+    Animated.parallel([
+      Animated.timing(pickerScale, {
+        toValue: 0.8,
+        duration: 120,
+        useNativeDriver: true,
+      }),
+      Animated.timing(pickerOpacity, {
+        toValue: 0,
+        duration: 120,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setShowReactions(false));
+  };
+
+  const pickReaction = (emoji: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setReactionCounts((prev) => {
+      const next = { ...prev };
+      if (myReaction && myReaction !== emoji) {
+        next[myReaction] = Math.max(0, (next[myReaction] ?? 1) - 1);
+        if (next[myReaction] === 0) delete next[myReaction];
+      }
+      if (myReaction === emoji) {
+        next[emoji] = Math.max(0, (next[emoji] ?? 1) - 1);
+        if (next[emoji] === 0) delete next[emoji];
+        setMyReaction(null);
+      } else {
+        next[emoji] = (next[emoji] ?? 0) + 1;
+        setMyReaction(emoji);
+      }
+      return next;
+    });
+    closeReactionPicker();
+    if (!post.liked && myReaction === null) onLike();
+  };
 
   const handleDoubleTap = () => {
     const now = Date.now();
@@ -100,6 +169,11 @@ export function PostCard({
     onSave();
   };
 
+  const topReactions = Object.entries(reactionCounts)
+    .filter(([, count]) => count > 0)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3);
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
@@ -150,9 +224,9 @@ export function PostCard({
             {
               opacity: heartOpacity,
               transform: [{ scale: heartScale }],
+              pointerEvents: "none",
             },
           ]}
-          pointerEvents="none"
         >
           <Ionicons name="heart" size={90} color="#fff" />
         </Animated.View>
@@ -160,15 +234,59 @@ export function PostCard({
 
       <View style={styles.actions}>
         <View style={styles.leftActions}>
-          <Pressable onPress={handleLikePress} style={styles.actionBtn} testID={`post-like-${post.id}`}>
-            <Animated.View style={{ transform: [{ scale: likeScale }] }}>
-              <Ionicons
-                name={post.liked ? "heart" : "heart-outline"}
-                size={26}
-                color={post.liked ? colors.like : colors.foreground}
-              />
-            </Animated.View>
-          </Pressable>
+          <View style={styles.likeContainer}>
+            <Pressable
+              onPress={handleLikePress}
+              onLongPress={openReactionPicker}
+              delayLongPress={400}
+              style={styles.actionBtn}
+              testID={`post-like-${post.id}`}
+            >
+              <Animated.View style={{ transform: [{ scale: likeScale }] }}>
+                {myReaction ? (
+                  <Text style={styles.reactionIcon}>{myReaction}</Text>
+                ) : (
+                  <Ionicons
+                    name={post.liked ? "heart" : "heart-outline"}
+                    size={26}
+                    color={post.liked ? colors.like : colors.foreground}
+                  />
+                )}
+              </Animated.View>
+            </Pressable>
+
+            {showReactions && (
+              <Animated.View
+                style={[
+                  styles.reactionPicker,
+                  {
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                    opacity: pickerOpacity,
+                    transform: [{ scale: pickerScale }],
+                  },
+                ]}
+              >
+                {REACTIONS.map((emoji) => (
+                  <Pressable
+                    key={emoji}
+                    onPress={() => pickReaction(emoji)}
+                    style={[
+                      styles.reactionPickerItem,
+                      myReaction === emoji && {
+                        backgroundColor: colors.primary + "20",
+                        borderRadius: 16,
+                      },
+                    ]}
+                    testID={`reaction-${emoji}`}
+                  >
+                    <Text style={styles.reactionPickerEmoji}>{emoji}</Text>
+                  </Pressable>
+                ))}
+              </Animated.View>
+            )}
+          </View>
+
           <Pressable
             onPress={onComment}
             style={styles.actionBtn}
@@ -193,10 +311,28 @@ export function PostCard({
         </Pressable>
       </View>
 
+      {showReactions && (
+        <Pressable style={styles.reactionBackdrop} onPress={closeReactionPicker} />
+      )}
+
       <View style={styles.info}>
-        <Text style={[styles.likes, { color: colors.foreground }]}>
-          {formatCount(post.likes)} likes
-        </Text>
+        {topReactions.length > 0 && (
+          <Pressable style={styles.reactionsRow} onPress={openReactionPicker} testID="reactions-row">
+            <View style={styles.reactionBubbles}>
+              {topReactions.map(([emoji]) => (
+                <Text key={emoji} style={styles.reactionBubbleEmoji}>{emoji}</Text>
+              ))}
+            </View>
+            <Text style={[styles.reactionTotal, { color: colors.mutedForeground }]}>
+              {formatCount(topReactions.reduce((acc, [, c]) => acc + c, 0) + post.likes)}
+            </Text>
+          </Pressable>
+        )}
+        {topReactions.length === 0 && (
+          <Text style={[styles.likes, { color: colors.foreground }]}>
+            {formatCount(post.likes)} likes
+          </Text>
+        )}
         <View style={styles.captionRow}>
           <Text style={[styles.captionUsername, { color: colors.foreground }]}>
             {post.username}
@@ -298,12 +434,78 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  likeContainer: {
+    position: "relative",
+    zIndex: 10,
+  },
   actionBtn: {
     marginRight: 14,
+  },
+  reactionIcon: {
+    fontSize: 24,
+    marginRight: 14,
+  },
+  reactionPicker: {
+    position: "absolute",
+    bottom: 40,
+    left: -8,
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 32,
+    borderWidth: 1,
+    paddingHorizontal: 6,
+    paddingVertical: 6,
+    gap: 2,
+    zIndex: 100,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+      },
+      android: { elevation: 8 },
+      web: { boxShadow: "0px 4px 12px rgba(0,0,0,0.15)" },
+    }),
+  },
+  reactionPickerItem: {
+    padding: 4,
+  },
+  reactionPickerEmoji: {
+    fontSize: 26,
+  },
+  reactionBackdrop: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9,
   },
   info: {
     paddingHorizontal: 12,
     paddingBottom: 12,
+  },
+  reactionsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+    gap: 6,
+  },
+  reactionBubbles: {
+    flexDirection: "row",
+    backgroundColor: "rgba(0,0,0,0.06)",
+    borderRadius: 12,
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    gap: 1,
+  },
+  reactionBubbleEmoji: {
+    fontSize: 14,
+  },
+  reactionTotal: {
+    fontSize: 13,
+    fontWeight: "600" as const,
   },
   likes: {
     fontWeight: "600" as const,

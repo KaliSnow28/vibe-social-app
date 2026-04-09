@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import React, { useRef, useState } from "react";
 import {
+  Animated,
   FlatList,
   Image,
   Platform,
@@ -31,9 +32,40 @@ export default function ChatScreen() {
   const insets = useSafeAreaInsets();
   const { conversations, sendMessage, me } = useApp();
   const [text, setText] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordSeconds, setRecordSeconds] = useState(0);
+  const recordTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const waveAnim = useRef(new Animated.Value(1)).current;
   const isWeb = Platform.OS === "web";
   const headerTop = isWeb ? 67 : insets.top;
   const bottomPad = isWeb ? 34 : insets.bottom;
+
+  const startRecording = () => {
+    setIsRecording(true);
+    setRecordSeconds(0);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    recordTimer.current = setInterval(() => setRecordSeconds((s) => s + 1), 1000);
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(waveAnim, { toValue: 1.3, duration: 400, useNativeDriver: true }),
+        Animated.timing(waveAnim, { toValue: 1, duration: 400, useNativeDriver: true }),
+      ])
+    ).start();
+  };
+
+  const stopRecording = () => {
+    setIsRecording(false);
+    if (recordTimer.current) clearInterval(recordTimer.current);
+    waveAnim.stopAnimation();
+    waveAnim.setValue(1);
+    if (recordSeconds >= 1) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      sendMessage(conv.id, `[voice:${recordSeconds}s]`);
+    }
+    setRecordSeconds(0);
+  };
+
+  const formatRecordTime = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
 
   const conv = conversations.find((c) => c.id === id) ?? conversations[0];
   const other = conv?.participants[0];
@@ -130,18 +162,52 @@ export default function ChatScreen() {
                       : [styles.bubbleThem, { backgroundColor: colors.messageBubbleIncoming }],
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.bubbleText,
-                      {
-                        color: isMe
-                          ? colors.messageBubbleForeground
-                          : colors.messageBubbleIncomingForeground,
-                      },
-                    ]}
-                  >
-                    {item.text}
-                  </Text>
+                  {item.text.startsWith("[voice:") ? (
+                    <View style={styles.voiceMsg}>
+                      <Ionicons
+                        name="play-circle"
+                        size={28}
+                        color={isMe ? "#fff" : colors.messageBubble}
+                      />
+                      <View style={styles.waveform}>
+                        {[...Array(18)].map((_, i) => (
+                          <View
+                            key={i}
+                            style={[
+                              styles.waveBar,
+                              {
+                                height: 4 + Math.abs(Math.sin(i * 0.7 + 1)) * 12,
+                                backgroundColor: isMe
+                                  ? "rgba(255,255,255,0.75)"
+                                  : colors.messageBubble,
+                              },
+                            ]}
+                          />
+                        ))}
+                      </View>
+                      <Text
+                        style={[
+                          styles.voiceDur,
+                          { color: isMe ? "rgba(255,255,255,0.85)" : colors.mutedForeground },
+                        ]}
+                      >
+                        {item.text.replace("[voice:", "").replace("]", "")}
+                      </Text>
+                    </View>
+                  ) : (
+                    <Text
+                      style={[
+                        styles.bubbleText,
+                        {
+                          color: isMe
+                            ? colors.messageBubbleForeground
+                            : colors.messageBubbleIncomingForeground,
+                        },
+                      ]}
+                    >
+                      {item.text}
+                    </Text>
+                  )}
                 </View>
                 <Text
                   style={[
@@ -199,13 +265,28 @@ export default function ChatScreen() {
             <Ionicons name="happy-outline" size={22} color={colors.mutedForeground} />
           </Pressable>
         </View>
-        {text.trim() ? (
+        {isRecording ? (
+          <View style={styles.recordingBar}>
+            <Animated.View style={[styles.recordingDot, { backgroundColor: colors.like, transform: [{ scale: waveAnim }] }]} />
+            <Text style={[styles.recordingTime, { color: colors.foreground }]}>
+              {formatRecordTime(recordSeconds)}
+            </Text>
+            <Text style={[styles.recordingHint, { color: colors.mutedForeground }]}>
+              Release to send
+            </Text>
+          </View>
+        ) : text.trim() ? (
           <Pressable onPress={handleSend} testID="chat-send">
             <Text style={[styles.sendText, { color: colors.primary }]}>Send</Text>
           </Pressable>
         ) : (
           <View style={styles.mediaActions}>
-            <Pressable style={styles.inputAction}>
+            <Pressable
+              style={styles.inputAction}
+              onPressIn={startRecording}
+              onPressOut={stopRecording}
+              testID="chat-voice"
+            >
               <Ionicons name="mic-outline" size={24} color={colors.foreground} />
             </Pressable>
             <Pressable style={styles.inputAction}>
@@ -341,6 +422,47 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700" as const,
     paddingBottom: 8,
+  },
+  voiceMsg: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 2,
+  },
+  waveform: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 2,
+    height: 24,
+  },
+  waveBar: {
+    width: 3,
+    borderRadius: 2,
+  },
+  voiceDur: {
+    fontSize: 11,
+    minWidth: 28,
+  },
+  recordingBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingBottom: 8,
+    flex: 1,
+    justifyContent: "center",
+  },
+  recordingDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  recordingTime: {
+    fontSize: 15,
+    fontWeight: "600" as const,
+    fontVariant: ["tabular-nums"],
+  },
+  recordingHint: {
+    fontSize: 12,
   },
   mediaActions: {
     flexDirection: "row",

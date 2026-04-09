@@ -15,6 +15,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AppProvider } from "@/context/AppContext";
+import { CharacterProvider } from "@/context/CharacterContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,6 +36,14 @@ function RootLayoutNav() {
       <Stack.Screen
         name="notifications"
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="character-chat/[id]"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="avatar-creator"
+        options={{ headerShown: false, presentation: "modal" }}
       />
     </Stack>
   );
@@ -63,7 +72,9 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <KeyboardProvider>
               <AppProvider>
-                <RootLayoutNav />
+                <CharacterProvider>
+                  <RootLayoutNav />
+                </CharacterProvider>
               </AppProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>
