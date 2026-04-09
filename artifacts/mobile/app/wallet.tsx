@@ -164,6 +164,12 @@ export default function WalletScreen() {
             </View>
             <Text style={styles.actionLabel}>Premium</Text>
           </Pressable>
+          <Pressable style={styles.actionBtn} onPress={() => router.push("/bundles")}>
+            <View style={[styles.actionIconWrap, { backgroundColor: "rgba(247,147,26,0.3)" }]}>
+              <FontAwesome5 name="gem" size={18} color="#F7931A" />
+            </View>
+            <Text style={styles.actionLabel}>Bundles</Text>
+          </Pressable>
         </View>
       </LinearGradient>
 

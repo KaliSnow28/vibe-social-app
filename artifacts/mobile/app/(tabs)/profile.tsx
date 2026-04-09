@@ -168,6 +168,17 @@ export default function ProfileScreen() {
           </View>
           <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
         </Pressable>
+        <Pressable
+          style={[styles.creatorPanelBtn, { backgroundColor: "#1a1505" }]}
+          onPress={() => router.push("/bundles")}
+        >
+          <FontAwesome5 name="gem" size={15} color="#F7931A" />
+          <View style={styles.creatorPanelInfo}>
+            <Text style={styles.creatorPanelLabel}>Bundles & Gems</Text>
+            <Text style={styles.creatorPanelValue}>💎 340 gems · Buy more</Text>
+          </View>
+          <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
+        </Pressable>
       </View>
 
       <ScrollView
