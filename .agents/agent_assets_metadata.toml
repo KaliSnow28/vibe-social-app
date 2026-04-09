@@ -48,6 +48,24 @@ uri = "file://attached_assets/generated_images/vibe_screenshot_nft.png"
 type = "image"
 title = "vibe nft marketplace screenshot"
 
+[[generated]]
+id = "7vSEHgYaNYib6w7H4xk8_"
+uri = "file://attached_assets/generated_images/vibe_screenshot_feed_2688.png"
+type = "image"
+title = "vibe feed 2688"
+
+[[generated]]
+id = "_9-vkA0_Xe50Cj_jF5SPJ"
+uri = "file://attached_assets/generated_images/vibe_screenshot_creator_2688.png"
+type = "image"
+title = "vibe creator 2688"
+
+[[generated]]
+id = "JxtdzjHrOjtwDSOyDvaZN"
+uri = "file://attached_assets/generated_images/vibe_screenshot_nft_2688.png"
+type = "image"
+title = "vibe nft 2688"
+
 [[outputs]]
 id = "viq2A09-cLTJxJd-UMrmk"
 uri = "file://attached_assets/generated_images/vibe_app_icon.png"
@@ -71,3 +89,21 @@ id = "h0VB-IH02FtmdWLJOXVEt"
 uri = "file://attached_assets/generated_images/vibe_screenshot_nft.png"
 type = "image"
 title = "Screenshot 3 — NFT Marketplace"
+
+[[outputs]]
+id = "3iDQXGhERCmoLzSrchbHP"
+uri = "file://attached_assets/generated_images/vibe_screenshot_feed_2688.jpg"
+type = "image"
+title = "Screenshot 1 — Social Feed (JPEG)"
+
+[[outputs]]
+id = "WBb6bRoAMD3bW3L7ZpCpj"
+uri = "file://attached_assets/generated_images/vibe_screenshot_creator_2688.jpg"
+type = "image"
+title = "Screenshot 2 — Creator Dashboard (JPEG)"
+
+[[outputs]]
+id = "jCJzwj_JUiZVU-QNFe-6Y"
+uri = "file://attached_assets/generated_images/vibe_screenshot_nft_2688.jpg"
+type = "image"
+title = "Screenshot 3 — NFT Marketplace (JPEG)"
