@@ -1,5 +1,6 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import { router } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
   Animated,
@@ -301,6 +302,23 @@ export function PostCard({
           <Pressable style={styles.actionBtn} testID={`post-share-${post.id}`}>
             <Feather name="send" size={22} color={colors.foreground} />
           </Pressable>
+          <Pressable
+            style={[styles.actionBtn, styles.tipBtn, { backgroundColor: colors.primary + "15" }]}
+            onPress={() =>
+              router.push({
+                pathname: "/send-tip" as any,
+                params: {
+                  creatorId: post.userId,
+                  creatorName: post.username,
+                  postId: post.id,
+                },
+              })
+            }
+            testID={`post-tip-${post.id}`}
+          >
+            <Ionicons name="heart" size={14} color={colors.primary} />
+            <Text style={[styles.tipBtnText, { color: colors.primary }]}>Tip</Text>
+          </Pressable>
         </View>
         <Pressable onPress={handleSavePress} testID={`post-save-${post.id}`}>
           <MaterialCommunityIcons
@@ -440,6 +458,19 @@ const styles = StyleSheet.create({
   },
   actionBtn: {
     marginRight: 14,
+  },
+  tipBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 16,
+    gap: 4,
+    marginRight: 0,
+  },
+  tipBtnText: {
+    fontSize: 13,
+    fontWeight: "600" as const,
   },
   reactionIcon: {
     fontSize: 24,

@@ -108,11 +108,13 @@ export default function ProfileScreen() {
           <Pressable
             style={[
               styles.editBtn,
-              { backgroundColor: colors.secondary, borderRadius: colors.radius },
+              { backgroundColor: colors.primary, borderRadius: colors.radius },
             ]}
+            onPress={() => router.push("/creator-studio" as any)}
+            testID="creator-studio-btn"
           >
-            <Text style={[styles.editBtnText, { color: colors.foreground }]}>
-              Share Profile
+            <Text style={[styles.editBtnText, { color: colors.primaryForeground }]}>
+              Monetize
             </Text>
           </Pressable>
           <Pressable

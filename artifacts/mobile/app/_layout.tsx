@@ -17,6 +17,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AppProvider } from "@/context/AppContext";
 import { CharacterProvider } from "@/context/CharacterContext";
 import { WalletProvider } from "@/context/WalletContext";
+import { PaymentsProvider } from "@/context/PaymentsContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -78,6 +79,13 @@ function RootLayoutNav() {
         name="video-call/[id]"
         options={{ headerShown: false, presentation: "fullScreenModal" }}
       />
+      <Stack.Screen name="creator-studio" options={{ headerShown: false }} />
+      <Stack.Screen name="create-tier" options={{ headerShown: false }} />
+      <Stack.Screen name="subscribe" options={{ headerShown: false }} />
+      <Stack.Screen name="send-tip" options={{ headerShown: false }} />
+      <Stack.Screen name="payout-accounts" options={{ headerShown: false }} />
+      <Stack.Screen name="earnings-dashboard" options={{ headerShown: false }} />
+      <Stack.Screen name="payout-history" options={{ headerShown: false }} />
     </Stack>
   );
 }
@@ -106,9 +114,11 @@ export default function RootLayout() {
             <KeyboardProvider>
               <AppProvider>
                 <WalletProvider>
-                  <CharacterProvider>
-                    <RootLayoutNav />
-                  </CharacterProvider>
+                  <PaymentsProvider>
+                    <CharacterProvider>
+                      <RootLayoutNav />
+                    </CharacterProvider>
+                  </PaymentsProvider>
                 </WalletProvider>
               </AppProvider>
             </KeyboardProvider>
