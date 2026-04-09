@@ -47,6 +47,14 @@ function RootLayoutNav() {
         options={{ headerShown: false, presentation: "modal" }}
       />
       <Stack.Screen
+        name="ai-studio"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ai-gallery"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="wallet"
         options={{ headerShown: false }}
       />

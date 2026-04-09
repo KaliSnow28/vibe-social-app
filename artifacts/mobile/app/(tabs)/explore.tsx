@@ -193,6 +193,30 @@ export default function ExploreScreen() {
           ListHeaderComponent={() => (
             <View style={styles.charactersSection}>
 
+              <Pressable
+                style={styles.aiStudioBanner}
+                onPress={() => router.push("/ai-studio")}
+              >
+                <LinearGradient
+                  colors={["#1a0533", "#0d1a3a", "#0a1a10"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.aiStudioGradient}
+                >
+                  <View style={styles.aiStudioLeft}>
+                    <Text style={styles.aiStudioEmoji}>✨</Text>
+                    <View>
+                      <Text style={styles.aiStudioTitle}>AI Creative Studio</Text>
+                      <Text style={styles.aiStudioSub}>Unlimited image generation • 12 styles • NSFW</Text>
+                    </View>
+                  </View>
+                  <View style={styles.aiStudioRight}>
+                    <Text style={styles.aiStudioBadge}>FREE</Text>
+                    <Feather name="chevron-right" size={16} color="#fff" />
+                  </View>
+                </LinearGradient>
+              </Pressable>
+
               <View style={styles.sectionBlock}>
                 <View style={styles.sectionRow}>
                   <Text style={[styles.sectionTitle, { color: colors.foreground }]}>🔥 Trending Creators</Text>
@@ -410,6 +434,24 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   tagsSection: {},
+  aiStudioBanner: {
+    marginHorizontal: 0,
+    marginBottom: 20,
+    borderRadius: 18,
+    overflow: "hidden",
+  },
+  aiStudioGradient: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 18,
+  },
+  aiStudioLeft: { flexDirection: "row", alignItems: "center", gap: 12 },
+  aiStudioEmoji: { fontSize: 32 },
+  aiStudioTitle: { color: "#fff", fontSize: 16, fontWeight: "800", marginBottom: 2 },
+  aiStudioSub: { color: "rgba(255,255,255,0.65)", fontSize: 12 },
+  aiStudioRight: { flexDirection: "row", alignItems: "center", gap: 8 },
+  aiStudioBadge: { color: "#00C9A7", fontSize: 11, fontWeight: "800", backgroundColor: "rgba(0,201,167,0.15)", borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3 },
   sectionBlock: {
     marginBottom: 20,
     paddingHorizontal: 0,

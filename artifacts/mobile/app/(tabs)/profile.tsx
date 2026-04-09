@@ -157,6 +157,17 @@ export default function ProfileScreen() {
           </View>
           <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
         </Pressable>
+        <Pressable
+          style={[styles.creatorPanelBtn, { backgroundColor: "#0a1a10" }]}
+          onPress={() => router.push("/ai-studio")}
+        >
+          <MaterialCommunityIcons name="creation" size={16} color="#00C9A7" />
+          <View style={styles.creatorPanelInfo}>
+            <Text style={styles.creatorPanelLabel}>AI Creative Studio</Text>
+            <Text style={styles.creatorPanelValue}>Unlimited Generations ✨</Text>
+          </View>
+          <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
+        </Pressable>
       </View>
 
       <ScrollView

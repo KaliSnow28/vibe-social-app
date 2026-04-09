@@ -25,7 +25,9 @@ Feature-rich social media app combining Instagram + Snapchat + Facebook.
 - **Camera** — filters, modes (Story/Reel/Photo/Video/Live → launches livestream)
 - **Reels** — vertical video scroll
 - **Messages** — conversations, voice messages, video call button
-- **Profile** — grid, highlights, creator panel (wallet/dashboard/premium links)
+- **Profile** — grid, highlights, creator panel (wallet/dashboard/premium/AI Studio links)
+- **AI Creative Studio** (`/ai-studio`) — unlimited image generation via Pollinations.ai, 12 style presets, 3 aspect ratios, content modes (Safe/Mature/18+ with age gate), negative prompts, generated gallery with post/save actions
+- **AI Gallery** (`/ai-gallery`) — community AI showcase, grid/list views, post-to-feed/save
 - **Notifications** — likes, comments, follows, mentions
 - **Crypto Wallet** (`/wallet`) — BTC/ETH/USDC/SOL balances, send/receive, transaction history, daily claim
 - **Video Call** (`/video-call/[id]`) — full-screen call UI, mute/camera/speaker/flip controls
@@ -46,6 +48,16 @@ Feature-rich social media app combining Instagram + Snapchat + Facebook.
 - Dynamic routes: typed route objects `{ pathname: "/route/[id]", params: { id } }`
 - IDs: `Date.now().toString() + Math.random().toString(36).substr(2, 9)` (no uuid)
 - Theme: primary `#E1306C`, accent `#833AB4`, dark mode supported
+
+## API Server (artifacts/api-server)
+
+Express 5 server running on port 8080. Routes:
+- `GET /health` — health check
+- `POST /api/ai/caption` — AI caption generation (OpenAI gpt-5.2)
+- `POST /api/ai/generate-image` — AI image generation (OpenAI gpt-image-1)
+- `POST /api/ai/hashtags` — AI hashtag generation (OpenAI gpt-5.2)
+
+Uses `@workspace/integrations-openai-ai-server` (lib/integrations-openai-ai-server) with Replit AI Integrations (AI_INTEGRATIONS_OPENAI_BASE_URL + AI_INTEGRATIONS_OPENAI_API_KEY).
 
 ## Key Commands
 
