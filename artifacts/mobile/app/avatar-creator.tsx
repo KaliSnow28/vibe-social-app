@@ -13,7 +13,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useCharacters } from "@/context/CharacterContext";
+import { useCharacters, type AvatarConfig } from "@/context/CharacterContext";
 import { useColors } from "@/hooks/useColors";
 
 const { width } = Dimensions.get("window");
@@ -98,7 +98,7 @@ const SECTIONS = [
   "Background",
 ];
 
-function getAvatarEmoji(config: any): string {
+function getAvatarEmoji(config: AvatarConfig): string {
   const expr = EXPRESSIONS.find((e) => e.key === config.expression);
   const acc = ACCESSORIES.find((a) => a.key === config.accessory);
   const eyes = EYES.find((e) => e.key === config.eyes);
