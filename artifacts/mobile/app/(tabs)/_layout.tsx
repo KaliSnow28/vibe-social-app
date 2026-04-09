@@ -12,7 +12,6 @@ import React from "react";
 import { Platform, StyleSheet, View, useColorScheme } from "react-native";
 import { useColors } from "@/hooks/useColors";
 import { useApp } from "@/context/AppContext";
-import { MaterialIcons } from "@expo/vector-icons";
 
 function NativeTabLayout() {
   return (
@@ -29,9 +28,9 @@ function NativeTabLayout() {
         <Icon sf={{ default: "plus.app", selected: "plus.app.fill" }} />
         <Label>Create</Label>
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="characters">
-        <Icon sf={{ default: "person.2.wave.2", selected: "person.2.wave.2.fill" }} />
-        <Label>AI</Label>
+      <NativeTabs.Trigger name="reels">
+        <Icon sf={{ default: "play.rectangle", selected: "play.rectangle.fill" }} />
+        <Label>Reels</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="messages">
         <Icon sf={{ default: "paperplane", selected: "paperplane.fill" }} />
@@ -139,18 +138,18 @@ function ClassicTabLayout() {
         }}
       />
       <Tabs.Screen
-        name="characters"
+        name="reels"
         options={{
           tabBarIcon: ({ color, focused }) =>
             isIOS ? (
               <SymbolView
-                name={focused ? "person.2.wave.2.fill" : "person.2.wave.2"}
+                name={focused ? "play.rectangle.fill" : "play.rectangle"}
                 tintColor={color}
-                size={24}
+                size={26}
               />
             ) : (
               <MaterialCommunityIcons
-                name={focused ? "robot" : "robot-outline"}
+                name={focused ? "play-box" : "play-box-outline"}
                 size={26}
                 color={color}
               />
@@ -158,7 +157,7 @@ function ClassicTabLayout() {
         }}
       />
       <Tabs.Screen
-        name="reels"
+        name="characters"
         options={{
           href: null,
         }}

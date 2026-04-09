@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "600" as const,
     marginTop: 4,
-    textShadow: "0px 1px 2px rgba(0,0,0,0.5)",
+
   },
   bottomInfo: {
     position: "absolute",
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "700" as const,
     fontSize: 15,
-    textShadow: "0px 1px 3px rgba(0,0,0,0.5)",
+
   },
   followBtn: {
     marginLeft: 10,
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     marginBottom: 8,
-    textShadow: "0px 1px 3px rgba(0,0,0,0.5)",
+
   },
   audioRow: {
     flexDirection: "row",
@@ -193,6 +193,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 12,
     marginLeft: 6,
-    textShadow: "0px 1px 2px rgba(0,0,0,0.5)",
+
   },
 });

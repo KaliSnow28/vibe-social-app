@@ -215,7 +215,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "700" as const,
     fontSize: 14,
-    textShadow: "0px 1px 2px rgba(0,0,0,0.5)",
   },
   storyTime: {
     color: "rgba(255,255,255,0.7)",

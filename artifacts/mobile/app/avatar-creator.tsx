@@ -114,7 +114,7 @@ export default function AvatarCreatorScreen() {
   const headerTop = isWeb ? 67 : insets.top;
   const bottomPad = isWeb ? 34 : insets.bottom;
 
-  const bgColors = BACKGROUNDS.find((b) => b.key === avatar.background)?.colors ?? ["#FFF9C4", "#FFCCBC"];
+  const bgColors: [string, string] = (BACKGROUNDS.find((b) => b.key === avatar.background)?.colors ?? ["#FFF9C4", "#FFCCBC"]) as [string, string];
   const skinColor = SKIN_TONES.find((s) => s.key === avatar.skinTone)?.color ?? "#FDDBB4";
   const hairColor = HAIR_COLORS.find((h) => h.key === avatar.hairColor)?.color ?? "#1a1a1a";
   const expression = EXPRESSIONS.find((e) => e.key === avatar.expression)?.emoji ?? "😊";
@@ -326,7 +326,7 @@ export default function AvatarCreatorScreen() {
 
       <View style={styles.previewSection}>
         <LinearGradient
-          colors={bgColors as unknown as string[]}
+          colors={bgColors as [string, string]}
           style={[styles.avatarPreviewBg, { borderRadius: 80 }]}
         >
           <View style={[styles.avatarFace, { backgroundColor: skinColor }]}>

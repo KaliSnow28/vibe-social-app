@@ -1,4 +1,4 @@
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -7,6 +7,7 @@ import {
   Image,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -14,6 +15,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useApp } from "@/context/AppContext";
+import { useCharacters } from "@/context/CharacterContext";
 import { useColors } from "@/hooks/useColors";
 
 const { width } = Dimensions.get("window");
@@ -43,6 +45,7 @@ export default function ExploreScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { posts } = useApp();
+  const { characters } = useCharacters();
   const [search, setSearch] = useState("");
   const [focused, setFocused] = useState(false);
   const isWeb = Platform.OS === "web";
@@ -157,6 +160,68 @@ export default function ExploreScreen() {
             },
           ]}
           columnWrapperStyle={styles.row}
+          ListHeaderComponent={() => (
+            <View style={styles.charactersSection}>
+              <View style={styles.charactersSectionHeader}>
+                <View style={styles.charactersSectionLeft}>
+                  <MaterialCommunityIcons name="robot-outline" size={18} color={colors.primary} />
+                  <Text style={[styles.charactersSectionTitle, { color: colors.foreground }]}>
+                    AI Characters
+                  </Text>
+                </View>
+                <Pressable
+                  onPress={() => router.push("/characters")}
+                  testID="see-all-characters"
+                >
+                  <Text style={[styles.seeAll, { color: colors.primary }]}>See All</Text>
+                </Pressable>
+              </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.charactersScroll}
+              >
+                {characters.slice(0, 5).map((char) => (
+                  <Pressable
+                    key={char.id}
+                    style={styles.charItem}
+                    onPress={() => router.push({ pathname: "/character-chat/[id]", params: { id: char.id } })}
+                    testID={`explore-char-${char.id}`}
+                  >
+                    <View style={[styles.charAvatarWrap, { borderColor: colors.primary }]}>
+                      <Image source={{ uri: char.avatar }} style={styles.charAvatar} />
+                      <View style={[styles.aiBadge, { backgroundColor: colors.primary }]}>
+                        <Text style={styles.aiBadgeText}>AI</Text>
+                      </View>
+                    </View>
+                    <Text style={[styles.charName, { color: colors.foreground }]} numberOfLines={1}>
+                      {char.emoji} {char.name}
+                    </Text>
+                    <Text style={[styles.charCategory, { color: colors.mutedForeground }]} numberOfLines={1}>
+                      {char.category}
+                    </Text>
+                  </Pressable>
+                ))}
+                <Pressable
+                  style={styles.charItem}
+                  onPress={() => router.push("/avatar-creator")}
+                  testID="explore-avatar-creator"
+                >
+                  <View style={[styles.charAvatarWrap, { borderColor: colors.border, borderStyle: "dashed" }]}>
+                    <View style={[styles.charAvatarPlaceholder, { backgroundColor: colors.muted }]}>
+                      <MaterialCommunityIcons name="face-man-shimmer" size={28} color={colors.primary} />
+                    </View>
+                  </View>
+                  <Text style={[styles.charName, { color: colors.foreground }]} numberOfLines={1}>
+                    My Avatar
+                  </Text>
+                  <Text style={[styles.charCategory, { color: colors.mutedForeground }]} numberOfLines={1}>
+                    Customize
+                  </Text>
+                </Pressable>
+              </ScrollView>
+            </View>
+          )}
           renderItem={({ item, index }) => {
             const isLarge = index % 7 === 0 || index % 7 === 5;
             return (
@@ -292,5 +357,87 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 6,
     right: 6,
+  },
+  charactersSection: {
+    width: "100%",
+    paddingBottom: 12,
+    paddingTop: 4,
+  },
+  charactersSectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  charactersSectionLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  charactersSectionTitle: {
+    fontSize: 15,
+    fontWeight: "700" as const,
+  },
+  seeAll: {
+    fontSize: 13,
+    fontWeight: "600" as const,
+  },
+  charactersScroll: {
+    paddingHorizontal: 12,
+    gap: 14,
+  },
+  charItem: {
+    alignItems: "center",
+    width: 64,
+    gap: 4,
+  },
+  charAvatarWrap: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 2,
+    position: "relative",
+    overflow: "visible",
+  },
+  charAvatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#ddd",
+    margin: 2,
+  },
+  charAvatarPlaceholder: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    margin: 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  aiBadge: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    borderRadius: 6,
+    zIndex: 1,
+  },
+  aiBadgeText: {
+    color: "#fff",
+    fontSize: 8,
+    fontWeight: "800" as const,
+  },
+  charName: {
+    fontSize: 11,
+    fontWeight: "600" as const,
+    textAlign: "center",
+    width: 64,
+  },
+  charCategory: {
+    fontSize: 10,
+    textAlign: "center",
+    width: 64,
   },
 });

@@ -61,7 +61,7 @@ export default function CharactersScreen() {
         <Text style={[styles.title, { color: colors.foreground }]}>Characters</Text>
         <Pressable
           style={[styles.avatarBtn, { backgroundColor: colors.muted, borderRadius: colors.radius }]}
-          onPress={() => router.push("/avatar-creator" as any)}
+          onPress={() => router.push("/avatar-creator")}
           testID="open-avatar-creator"
         >
           <MaterialCommunityIcons name="face-man-shimmer" size={18} color={colors.primary} />
@@ -87,7 +87,7 @@ export default function CharactersScreen() {
                 styles.featuredBanner,
                 { backgroundColor: colors.primary + "18", borderColor: colors.primary + "30", borderRadius: colors.radius + 4 },
               ]}
-              onPress={() => router.push(`/character-chat/${characters[0].id}` as any)}
+              onPress={() => router.push({ pathname: "/character-chat/[id]", params: { id: characters[0].id } })}
               testID="featured-character"
             >
               <View style={styles.featuredLeft}>
@@ -168,7 +168,7 @@ export default function CharactersScreen() {
             ]}
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              router.push(`/character-chat/${item.id}` as any);
+              router.push({ pathname: "/character-chat/[id]", params: { id: item.id } });
             }}
             testID={`character-${item.id}`}
           >

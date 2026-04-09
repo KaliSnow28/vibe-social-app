@@ -15,7 +15,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useCharacters } from "@/context/CharacterContext";
+import { CharacterMessage, useCharacters } from "@/context/CharacterContext";
 import { useColors } from "@/hooks/useColors";
 
 function formatTime(ts: number): string {
@@ -90,7 +90,7 @@ export default function CharacterChatScreen() {
   const character = getCharacterById(id!);
   const messages = characterChats[id!] ?? [];
 
-  const initMessages = character
+  const initMessages: CharacterMessage[] = character
     ? [
         {
           id: "init",
@@ -101,7 +101,7 @@ export default function CharacterChatScreen() {
       ]
     : [];
 
-  const allMessages = messages.length > 0 ? [...messages].reverse() : [...initMessages].reverse();
+  const allMessages: CharacterMessage[] = messages.length > 0 ? [...messages].reverse() : [...initMessages].reverse();
 
   const handleSend = () => {
     const trimmed = text.trim();
